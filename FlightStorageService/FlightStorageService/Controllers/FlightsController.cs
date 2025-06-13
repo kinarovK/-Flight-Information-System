@@ -1,4 +1,5 @@
 using AutoMapper;
+using FlightStorageService.Caching;
 using FlightStorageService.Domain;
 using FlightStorageService.Dtos;
 using FlightStorageService.Services;
@@ -7,18 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace FlightStorageService.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/flights")]
 [TypeFilter(typeof(CustomExceptionFilterAttribute))]
 public class FlightsController : ControllerBase
 {
 
     private readonly IFlightService _flightService;
     private readonly IMapper _mapper;
-
-    public FlightsController(IFlightService flightService, IMapper mapper)
+    private readonly ICacheHelper _cacheHelper;
+    public FlightsController(IFlightService flightService, IMapper mapper, ICacheHelper cacheHelper)
     {
         _flightService = flightService;
         _mapper = mapper;
+        _cacheHelper = cacheHelper;
     }
     /// <summary>
     /// Retrieves flight by flight number.
@@ -30,8 +32,19 @@ public class FlightsController : ControllerBase
     [HttpGet("{flightNumber}")]
     public async Task<IActionResult> GetFlightByFlightNumber(string flightNumber, CancellationToken cancellationToken)
     {
-        var flight = await _flightService.GetFlightByNumberAsync(flightNumber, cancellationToken);
-        var flightDto = _mapper.Map<FlightDto>(flight);
+        string cacheKey = $"Flight_{flightNumber}";
+        var flightDto = await 
+           _cacheHelper.GetOrCreate(
+               cacheKey,
+               async () =>
+               {
+                   var flight = _flightService.GetFlightByNumberAsync(flightNumber, cancellationToken).Result;
+                   return _mapper.Map<FlightDto>(flight);
+               }
+       );
+
+        //var flight = await _flightService.GetFlightByNumberAsync(flightNumber, cancellationToken);
+        //var flightDto = _mapper.Map<FlightDto>(flight);
         return Ok(flightDto);
     }
     /// <summary>
@@ -43,8 +56,18 @@ public class FlightsController : ControllerBase
     [HttpGet("departure")]
     public async Task<IActionResult> GetFlightDepartureByCityAndDate([FromQuery] string city, [FromQuery] DateTime date, CancellationToken cancellationToken)
     {
-        var flights = await _flightService.GetFlightsByDepartureCityAndDateAsync(city, date, cancellationToken);
-        var flightDto = _mapper.Map<IEnumerable<FlightDto>>(flights);
+        string cacheKey = $"Flight_departure_{city}_{date}";
+        var flightDto = await
+          _cacheHelper.GetOrCreate(
+              cacheKey,
+              async () =>
+              {
+                  var flights = await _flightService.GetFlightsByDepartureCityAndDateAsync(city, date, cancellationToken);
+                  return _mapper.Map<IEnumerable<FlightDto>>(flights);
+              }
+        );
+        //var flights = await _flightService.GetFlightsByDepartureCityAndDateAsync(city, date, cancellationToken);
+        //var flightDto = _mapper.Map<IEnumerable<FlightDto>>(flights);
         return Ok(flightDto);
     }
 
@@ -57,8 +80,17 @@ public class FlightsController : ControllerBase
     [HttpGet("arrival")]
     public async Task<IActionResult> GetFlightArrivalByCityAndDate([FromQuery] string city, [FromQuery] DateTime date, CancellationToken cancellationToken)
     {
-        var flights = await _flightService.GetFlightsByArrivalCityAndDateAsync(city, date, cancellationToken);
-        var flightDto = _mapper.Map<IEnumerable<FlightDto>>(flights);
+        string cacheKey = $"Flight_arrival_{city}_{date}";
+        var flightDto = await
+          _cacheHelper.GetOrCreate(
+              cacheKey,
+              async () =>
+              {
+                  var flights = await _flightService.GetFlightsByArrivalCityAndDateAsync(city, date, cancellationToken);
+                  return _mapper.Map<IEnumerable<FlightDto>>(flights);
+              }
+        );
+       
         return Ok(flightDto);
     }
     /// <summary>
@@ -68,11 +100,19 @@ public class FlightsController : ControllerBase
     /// <response code="200">Returns flights by date.</response>
     /// <response code="404">No flights found.</response>
 
-    [HttpGet]
+    [HttpGet()]
     public async Task<IActionResult> GetFlightsByDate([FromQuery] DateTime date, CancellationToken cancellationToken)
     {
-        var flights = await _flightService.GetFlightsByDateAsync(date, cancellationToken);
-        var flightDto = _mapper.Map<IEnumerable<FlightDto>>(flights);
+        string cacheKey = $"FlightDate_{date}";
+        var flightDto = await
+          _cacheHelper.GetOrCreate(
+              cacheKey,
+              async () =>
+              {
+                  var flights = await _flightService.GetFlightsByDateAsync(date, cancellationToken);
+                  return _mapper.Map<IEnumerable<FlightDto>>(flights);
+              }
+        );
         return Ok(flightDto);
     }
 
@@ -93,8 +133,11 @@ public class FlightsController : ControllerBase
         }
         var mappedFlight = _mapper.Map<Flight>(flight);
         await _flightService.AddFlightAsync(mappedFlight, cancellationToken);
+        _cacheHelper.Remove();
         return CreatedAtAction(nameof(GetFlightByFlightNumber), new { flightNumber = flight.FlightNumber }, flight);
     }
+
+
     /// <summary>
     /// Updates an existing Flight.
     /// </summary>
@@ -110,6 +153,7 @@ public class FlightsController : ControllerBase
         var mappedFlight = _mapper.Map<Flight>(flight);
         mappedFlight.FlightNumber = flightNumber;
         await _flightService.UpdateFlightAsync(mappedFlight, cancellationToken);
+        _cacheHelper.Remove();
         return NoContent();
     }
     /// <summary>
@@ -123,6 +167,7 @@ public class FlightsController : ControllerBase
     public async Task<IActionResult> DeleteFlight(string flightNumber, CancellationToken cancellationToken)
     {
         await _flightService.DeleteFlightAsync(flightNumber, cancellationToken);
+        _cacheHelper.Remove();
         return NoContent();
     }
 
