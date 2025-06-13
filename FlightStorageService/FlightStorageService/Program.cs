@@ -1,4 +1,5 @@
 
+using FlightStorageService.Caching;
 using FlightStorageService.DAL;
 using FlightStorageService.Dtos.MappingProfile;
 using FlightStorageService.Services;
@@ -21,6 +22,7 @@ public class Program
             opt.Filters.Add<CustomExceptionFilterAttribute>();
         });
         builder.Services.AddMemoryCache();
+        builder.Services.AddSingleton<ICacheHelper, CacheHelper>();
         builder.Services.AddLogging(configure => configure.AddConsole());
         builder.Services.AddDependecyForServices();
         builder.Services.AddDependecyForDatabase(builder.Configuration);
