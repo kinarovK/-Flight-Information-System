@@ -1,0 +1,330 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Gamestore api",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Flights/{flightNumber}": {
+      "get": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Retrieves flight by flight number.",
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns specific flight."
+          },
+          "404": {
+            "description": "No flight was found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Updates an existing Flight.",
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Flight update data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlightDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlightDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Updated successfully."
+          },
+          "400": {
+            "description": "Incorrect request."
+          },
+          "404": {
+            "description": "No flight found by flight number."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Deletes a Flight by Flight number.",
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "description": "The flight to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Deleted successfully."
+          },
+          "404": {
+            "description": "No platform found by id."
+          }
+        }
+      }
+    },
+    "/api/Flights/departure": {
+      "get": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Retrieves all the flights by specific date and departure city.",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns flights by date and departure city."
+          },
+          "404": {
+            "description": "No flights found."
+          }
+        }
+      }
+    },
+    "/api/Flights/arrival": {
+      "get": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Retrieves all the flights by specific date and arrival city.",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns flights by date and arrival city."
+          },
+          "404": {
+            "description": "No flights found."
+          }
+        }
+      }
+    },
+    "/api/Flights": {
+      "get": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Retrieves all the flights by specific date.",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns flights by date."
+          },
+          "404": {
+            "description": "No flights found."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Adds a new Flight.",
+        "requestBody": {
+          "description": "Flight creation data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlightDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlightDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Returns created flight object."
+          },
+          "400": {
+            "description": "Incorrect request."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Flights"
+        ],
+        "summary": "Deletes a Flight before actual date.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Deleted successfully."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FlightDto": {
+        "required": [
+          "arrivalAirportCity",
+          "departureAirportCity",
+          "departureDateTime",
+          "durationMinutes",
+          "flightNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "flightNumber": {
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string"
+          },
+          "departureDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "departureAirportCity": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "arrivalAirportCity": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "durationMinutes": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateFlightDto": {
+        "required": [
+          "arrivalAirportCity",
+          "departureAirportCity",
+          "departureDateTime",
+          "durationMinutes"
+        ],
+        "type": "object",
+        "properties": {
+          "departureDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "departureAirportCity": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "arrivalAirportCity": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "durationMinutes": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

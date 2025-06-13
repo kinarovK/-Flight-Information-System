@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FlightStorageService</name>
+    </assembly>
+    <members>
+        <member name="M:FlightStorageService.Controllers.FlightsController.GetFlightByFlightNumber(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves flight by flight number.
+            </summary>
+            <returns>An object of flight</returns>
+            <response code="200">Returns specific flight.</response>
+            <response code="404">No flight was found.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.GetFlightDepartureByCityAndDate(System.String,System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all the flights by specific date and departure city.
+            </summary>
+            <returns>A list of flights.</returns>
+            <response code="200">Returns flights by date and departure city.</response>
+            <response code="404">No flights found.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.GetFlightArrivalByCityAndDate(System.String,System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all the flights by specific date and arrival city.
+            </summary>
+            <returns>A list of flights.</returns>
+            <response code="200">Returns flights by date and arrival city.</response>
+            <response code="404">No flights found.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.GetFlightsByDate(System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all the flights by specific date.
+            </summary>
+            <returns>A list of flights.</returns>
+            <response code="200">Returns flights by date.</response>
+            <response code="404">No flights found.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.AddFlight(FlightStorageService.Dtos.FlightDto,System.Threading.CancellationToken)">
+            <summary>
+            Adds a new Flight.
+            </summary>
+            <param name="flight">Flight creation data.</param>
+            <returns>A created Flight.</returns>
+            <response code="201">Returns created flight object.</response>
+            <response code="400">Incorrect request.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.UpdateFlight(System.String,FlightStorageService.Dtos.UpdateFlightDto,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing Flight.
+            </summary>
+            <param name="flight">Flight update data.</param>
+            <returns>Success message.</returns>
+            <response code="204">Updated successfully.</response>
+            <response code="400">Incorrect request.</response>
+            <response code="404">No flight found by flight number.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.DeleteFlight(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Deletes a Flight by Flight number.
+            </summary>
+            <param name="flightNumber">The flight to delete.</param>
+            <returns>An HTTP NoContent response.</returns>
+            <response code="204">Deleted successfully.</response>
+            <response code="404">No platform found by id.</response>
+        </member>
+        <member name="M:FlightStorageService.Controllers.FlightsController.CleanupOldFlights(System.Threading.CancellationToken)">
+            <summary>
+            Deletes a Flight before actual date.
+            </summary>
+            <returns>An HTTP NoContent response.</returns>
+            <response code="204">Deleted successfully.</response>
+        </member>
+    </members>
+</doc>

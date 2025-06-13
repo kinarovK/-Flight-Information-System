@@ -1,0 +1,47 @@
+﻿@model FlightClientApp.Models.Flight
+
+@{
+    ViewData["Title"] = "Add New Flight";
+}
+
+<h1 class="text-center mb-4">Create New Flight</h1>
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" asp-action="Create">
+
+    <div class="form-group">
+        <label for="flightNumber">Flight Number:</label>
+        <input type="text" class="form-control" id="flightNumber" name="FlightNumber" required />
+    </div>
+    <div class="form-group">
+        <label for="departureDateTime">Departure DateTime:</label>
+        <input type="datetime-local" class="form-control" id="departureDateTime" name="DepartureDateTime" required />
+    </div>
+
+    <div class="form-group">
+        <label for="departureAirportCity">Departure Airport City:</label>
+        <input type="text" class="form-control" id="departureAirportCity" name="DepartureAirportCity" required />
+    </div>
+
+    <div class="form-group">
+        <label for="arrivalAirportCity">Arrival Airport City:</label>
+        <input type="text" class="form-control" id="arrivalAirportCity" required name="ArrivalAirportCity" />
+    </div>
+
+    <div class="form-group">
+        <label for="durationMinutes">Duration (Minutes):</label>
+        <input type="number" class="form-control" id="durationMinutes" name="DurationMinutes" required />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Create Flight</button>
+    <a class="btn btn-secondary mt-3" asp-action="Index">Cancel</a>
+</form>
+    </div>
+    </div>
+</div>

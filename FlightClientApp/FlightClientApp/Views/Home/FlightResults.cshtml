@@ -1,0 +1,42 @@
+﻿@model List<FlightClientApp.Models.Flight>
+
+@{
+    ViewData["Title"] = "Flight Results";
+}
+
+<h1>Flight Results</h1>
+
+@if (Model.Count == 0)
+{
+    <p>No flights found for the selected date.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Flight Number</th>
+                <th>Departure DateTime</th>
+                <th>Departure Airport City</th>
+                <th>Arrival Airport City</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var flight in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Search" asp-route-flightNumber="@flight.FlightNumber">
+                            @flight.FlightNumber
+                        </a>
+                    </td>
+                    <td>@flight.DepartureDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@flight.DepartureAirportCity</td>
+                    <td>@flight.ArrivalAirportCity</td>
+                    <td>@flight.DurationMinutes mins</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Find Flight";
+}
+
+<h1 class="mb-4 text-center">Find Flight</h1>
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-success mb-3 mr-3" asp-action="Create">Add New Flight</a>
+    <form asp-action="Cleanup" method="post" style="display: inline;">
+        <button type="submit" class="btn btn-danger mb-3">Cleanup Old Flights</button>
+    </form>
+   
+</div>
+<div class="d-flex justify-content-start mb-4">
+<form method="get" asp-action="Search" >
+    <div class="form-group">
+        <label for="flightNumber">Flight Number:</label>
+        <input type="text" class="form-control" id="flightNumber" name="flightNumber" placeholder="Enter flight number" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-1">Search</button>
+</form>
+</div>
+<div class="d-flex justify-content-start mb-4">
+<form method="get" asp-action="SearchByDate">
+    <div class="form-group">
+        <label for="flightDate">Search by Date:</label>
+            <input type="text" class="form-control datepicker" id="flightDate" name="date" placeholder="Enter flight date" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-1">Search</button>
+</form>
+</div>
+<div class="d-flex justify-content-start mb-4">
+<form method="get" asp-action="SearchByDepartureCityAndDate">
+    <div class="form-group">
+        <label for="departureCity">Departure City:</label>
+            <input type="text" class="form-control" id="departureCity" name="city" placeholder="Enter departure city" />
+    </div>
+    <div class="form-group">
+        <label for="flightDate">Date:</label>
+            <input type="text" class="form-control datepicker" id="flightDate" name="date" placeholder="Enter flight date" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-1">Search</button>
+</form>
+</div>
+<div class="d-flex justify-content-start mb-5">
+<form method="get" asp-action="SearchByArrivalCityAndDate">
+    <div class="form-group">
+        <label for="arrivalCity">Arrival City:</label>
+            <input type="text" class="form-control" id="arrivalCity" name="city" placeholder="Enter arrival city" />
+    </div>
+    <div class="form-group">
+        <label for="flightDate">Date:</label>
+            <input type="text" class="form-control datepicker" id="flightDate" name="date" placeholder="Enter flight date" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-1">Search</button>
+</form>
+</div>

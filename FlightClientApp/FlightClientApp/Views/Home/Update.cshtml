@@ -1,0 +1,48 @@
+﻿@model FlightClientApp.Models.Flight
+
+@{
+    ViewData["Title"] = "Update Flight";
+}
+
+<h1 class="text-center mb-4">Update Flight</h1>
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+<form method="post" asp-action="Update">
+    <div class="form-group">
+        <label for="flightNumber">Flight Number:</label>
+        <input type="text" class="form-control" id="flightNumber" name="FlightNumber" value="@Model.FlightNumber" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="departureDateTime">Departure DateTime:</label>
+        <input type="datetime-local" class="form-control" id="departureDateTime" name="DepartureDateTime" value="@Model.DepartureDateTime.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <div class="form-group">
+        <label for="departureAirportCity">Departure Airport City:</label>
+        <input type="text" class="form-control" id="departureAirportCity" name="DepartureAirportCity" value="@Model.DepartureAirportCity" />
+    </div>
+
+    <div class="form-group">
+        <label for="arrivalAirportCity">Arrival Airport City:</label>
+        <input type="text" class="form-control" id="arrivalAirportCity" name="ArrivalAirportCity" value="@Model.ArrivalAirportCity" />
+    </div>
+
+    <div class="form-group">
+        <label for="durationMinutes">Duration (Minutes):</label>
+        <input type="number" class="form-control" id="durationMinutes" name="DurationMinutes" value="@Model.DurationMinutes" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+    <a class="btn btn-secondary mt-3" asp-action="Search" asp-route-flightNumber="@Model.FlightNumber">Cancel</a>
+</form>
+            
+        </div>
+    </div><
+</div>
